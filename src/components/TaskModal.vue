@@ -1,0 +1,212 @@
+<!-- TaskModal.vue -->
+<template>
+  <transition name="fade">
+    <div v-if="visible" class="backdrop-main" @click="handleClose"></div>
+  </transition>
+  <ModalAnimation>
+    <div v-if="visible" class="modal" @click.self="handleClose">
+      <div class="modal-form">
+        <ModalHeader :hasChanges="hasChanges" :isTitleFilled="isTitleFilled" @close="handleClose" @save="handleSave" />
+        
+        <FormInput 
+          label="Task" 
+          placeholder="Enter task..." 
+          v-model="task.name" 
+          maxlength="30" 
+          :focused="nameFocused" 
+          @focus="nameFocused = true" 
+          @blur="nameFocused = false"
+          @input="markAsChanged"
+        />
+        
+        <FormInput 
+          label="Note" 
+          placeholder="Extra notes..." 
+          v-model="task.details" 
+          maxlength="65" 
+          textarea
+          :focused="detailsFocused" 
+          @focus="detailsFocused = true" 
+          @blur="detailsFocused = false"
+          @input="markAsChanged"
+        />
+
+        <PrioritySelector :priority="task.priority" @setPriority="setPriority" />
+        
+        <div class="delete-modal-container">
+          <button class="open-delete-modal" @click="openDeleteModal"><img src="@/assets/trash-icon.svg" alt=""></button>
+        </div>
+      </div>
+      <DeleteModal v-if="showDeleteModal" @confirmDelete="confirmDelete" @close="closeDeleteModal" />
+    </div>
+  </ModalAnimation>
+</template>
+
+<script setup>
+import { ref, reactive, watch, onMounted, onUnmounted, computed } from 'vue';
+import ModalAnimation from './ModalAnimation.vue';
+import ModalHeader from './ModalHeader.vue';
+import FormInput from './FormInput.vue';
+import PrioritySelector from './PrioritySelector.vue';
+import DeleteModal from './DeleteModal.vue';
+
+const props = defineProps(['task']);
+const emit = defineEmits(['close', 'save', 'delete']);
+
+const originalTask = ref({
+  name: props.task?.name || '',
+  details: props.task?.details || '',
+  priority: props.task?.priority || 'Low'
+});
+
+const task = reactive({
+  id: props.task?.id || null,
+  name: props.task?.name || '',
+  details: props.task?.details || '',
+  priority: props.task?.priority || 'Low',
+  completed: props.task?.completed || false
+});
+
+const visible = ref(false);
+const showDeleteModal = ref(false);
+const hasChanges = ref(false);
+
+const nameFocused = ref(false);
+const detailsFocused = ref(false);
+
+const markAsChanged = () => {
+  hasChanges.value = true;
+};
+
+const handleSave = () => {
+  emit('save', { ...task });
+  hasChanges.value = false;
+  closeWithAnimation();
+};
+
+const setPriority = (priority) => {
+  if (task.priority !== priority) {
+    task.priority = priority;
+    markAsChanged();
+  }
+};
+
+const handleClose = () => {
+  closeWithAnimation();
+};
+
+const openDeleteModal = () => {
+  showDeleteModal.value = true;
+};
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+};
+
+const confirmDelete = () => {
+  emit('delete', task.id);
+  closeDeleteModal();
+  closeWithAnimation();
+};
+
+const disableScroll = () => {
+  document.body.style.overflow = 'hidden';
+};
+
+const enableScroll = () => {
+  document.body.style.overflow = '';
+};
+
+watch(() => props.task, (newTask) => {
+  Object.assign(task, newTask || { name: '', details: '', priority: 'Low', completed: false });
+  Object.assign(originalTask.value, newTask || { name: '', details: '', priority: 'Low' });
+  visible.value = true;
+  disableScroll();
+  hasChanges.value = false;
+});
+
+onMounted(() => {
+  visible.value = true;
+  disableScroll();
+});
+
+onUnmounted(() => {
+  enableScroll();
+});
+
+watch(visible, (newVal) => {
+  if (!newVal) {
+    enableScroll();
+  }
+});
+
+const isTitleFilled = computed(() => task.name.trim().length > 0);
+
+const closeWithAnimation = () => {
+  visible.value = false;
+  setTimeout(() => {
+    emit('close');
+  }, 300);
+};
+</script>
+
+<style scoped>
+.backdrop-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter, 
+.fade-leave-to {
+  opacity: 0;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1001;
+}
+
+.modal-form {
+  background: #E8E8E8;
+  padding: 20px;
+  border-radius: 2rem 2rem 0 0;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.delete-modal-container {
+  display: flex;
+  justify-content: right;
+}
+
+.open-delete-modal {
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
+}
+
+.open-delete-modal img {
+  height: 1.2rem;
+}
+</style>
