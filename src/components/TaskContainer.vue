@@ -2,7 +2,6 @@
 <template>
   <div class="task-container" 
        :class="{'animate-task': animate, 'completed-task': isCompleted}"
-       :style="{ backgroundColor: getPriorityColor(task.priority) }"
        @click="openModal">
     <label class="custom-checkbox" @click.stop>
       <input type="checkbox" v-model="isCompleted" @change="markCompleted" />
@@ -46,32 +45,24 @@ const markCompleted = () => {
     console.log('Animation ended');
   }, 500); // Adjust the duration to match your animation
 };
-
-const getPriorityColor = (priority) => {
-  switch (priority) {
-    case 'High':
-      return '#FE6F5B';
-    case 'Medium':
-      return '#F8F85B';
-    case 'Low':
-      return '#98EF64';
-    default:
-      return 'white';
-  }
-};
 </script>
 
 <style scoped>
 .task-container {
   margin-bottom: 10px;
-  padding: 20px;
+  padding: 12px;
   display: flex;
-  border-radius: 15px;
+  border-radius: 10px;
   flex-direction: row;
   justify-content: space-between;
   gap: 10px;
   transition: all 0.5s ease;
   cursor: pointer;
+  background-color: var(--clr-secondary-background);
+}
+
+.task-container:hover {
+  background-color: var(--clr-accent-200);
 }
 
 .task-text-container {
@@ -82,10 +73,12 @@ const getPriorityColor = (priority) => {
   font-size: 1rem;
   margin-bottom: 0;
   line-height: 20px;
+  color: var(--clr-main-100);
 }
 
 .container-note-text {
   line-height: 1.2rem;
+  color: var(--clr-main-100);
 }
 
 .custom-checkbox {
@@ -101,7 +94,7 @@ const getPriorityColor = (priority) => {
   width: 30px;
   height: 30px;
   background-color: rgba(0, 0, 0, 0);
-  border: 2px solid #000;
+  border: 2px solid var(--clr-main-200);
   border-radius: 5px;
   position: relative;
   transition: background-color 0.3s ease;

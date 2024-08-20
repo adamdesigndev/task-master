@@ -56,7 +56,7 @@ const updateValue = (event) => {
   font-size: .9rem;
   font-weight: 600;
   letter-spacing: 0.07rem;
-  color: #575757;
+  color: var();
 }
 
 .title-input, .note-input {
@@ -66,6 +66,7 @@ const updateValue = (event) => {
   border-radius: 5px;
   font-size: 1.3rem;
   font-family: Arial, sans-serif;
+  color: var(--clr-main-100);
 }
 
 .note-input {

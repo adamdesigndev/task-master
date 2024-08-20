@@ -32,7 +32,7 @@ const handleDeleteTask = (taskId) => {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #232323;
+  background-color: var(--clr-background);
   border-radius: 8px;
   display: flex;
   flex-direction: column;

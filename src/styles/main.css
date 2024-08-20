@@ -13,10 +13,28 @@ html, body {
 
 body {
   font-family: Arial, sans-serif;
-  background-color: #232323;
+  background-color: var(--clr-background);
   color: #000;
   line-height: 1.6;
   margin: 0;
   padding: 0;
+}
+
+:root {
+  /* background Colors */
+  --clr-background: #111214;
+  --clr-secondary-background: #1F2326;
+
+  /* white Colors */
+  --clr-main-100: #E8E8E8;
+  --clr-main-200: #A8A8A8;
+
+  /* accent Colors */
+  --clr-accent-100: #479A84;
+  --clr-accent-200: rgba(71, 154, 132, 1);
+  /* --clr-accent-200: rgba(71, 154, 132, .12); */
+
+  /* delete Colors */
+  --clr-delete: #F10C49;
 }
 

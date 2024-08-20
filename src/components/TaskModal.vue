@@ -9,7 +9,7 @@
         <ModalHeader :hasChanges="hasChanges" :isTitleFilled="isTitleFilled" @close="handleClose" @save="handleSave" />
         
         <FormInput 
-          label="Task" 
+          label="" 
           placeholder="Enter task..." 
           v-model="task.name" 
           maxlength="30" 
@@ -20,7 +20,7 @@
         />
         
         <FormInput 
-          label="Note" 
+          label="" 
           placeholder="Extra notes..." 
           v-model="task.details" 
           maxlength="65" 
@@ -30,8 +30,6 @@
           @blur="detailsFocused = false"
           @input="markAsChanged"
         />
-
-        <PrioritySelector :priority="task.priority" @setPriority="setPriority" />
         
         <div class="delete-modal-container">
           <button class="open-delete-modal" @click="openDeleteModal"><img src="@/assets/trash-icon.svg" alt=""></button>
@@ -47,7 +45,6 @@ import { ref, reactive, watch, onMounted, onUnmounted, computed } from 'vue';
 import ModalAnimation from './ModalAnimation.vue';
 import ModalHeader from './ModalHeader.vue';
 import FormInput from './FormInput.vue';
-import PrioritySelector from './PrioritySelector.vue';
 import DeleteModal from './DeleteModal.vue';
 
 const props = defineProps(['task']);
@@ -55,15 +52,13 @@ const emit = defineEmits(['close', 'save', 'delete']);
 
 const originalTask = ref({
   name: props.task?.name || '',
-  details: props.task?.details || '',
-  priority: props.task?.priority || 'Low'
+  details: props.task?.details || ''
 });
 
 const task = reactive({
   id: props.task?.id || null,
   name: props.task?.name || '',
   details: props.task?.details || '',
-  priority: props.task?.priority || 'Low',
   completed: props.task?.completed || false
 });
 
@@ -82,13 +77,6 @@ const handleSave = () => {
   emit('save', { ...task });
   hasChanges.value = false;
   closeWithAnimation();
-};
-
-const setPriority = (priority) => {
-  if (task.priority !== priority) {
-    task.priority = priority;
-    markAsChanged();
-  }
 };
 
 const handleClose = () => {
@@ -118,8 +106,8 @@ const enableScroll = () => {
 };
 
 watch(() => props.task, (newTask) => {
-  Object.assign(task, newTask || { name: '', details: '', priority: 'Low', completed: false });
-  Object.assign(originalTask.value, newTask || { name: '', details: '', priority: 'Low' });
+  Object.assign(task, newTask || { name: '', details: '', completed: false });
+  Object.assign(originalTask.value, newTask || { name: '', details: '' });
   visible.value = true;
   disableScroll();
   hasChanges.value = false;
@@ -149,6 +137,7 @@ const closeWithAnimation = () => {
   }, 300);
 };
 </script>
+
 
 <style scoped>
 .backdrop-main {
@@ -185,7 +174,7 @@ const closeWithAnimation = () => {
 }
 
 .modal-form {
-  background: #E8E8E8;
+  background: var(--clr-secondary-background);
   padding: 20px;
   border-radius: 2rem 2rem 0 0;
   width: 100%;

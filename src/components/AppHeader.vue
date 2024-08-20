@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
   position: -webkit-sticky; /* For Safari */
   position: sticky;
   top: 0;
-  background-color: #232323;
+  background-color: var(--clr-background);
   z-index: 1000;
   padding: 1rem 0rem;
 }
