@@ -31,9 +31,10 @@
           @blur="detailsFocused = false"
           @input="markAsChanged"
         />
-        
-        <div class="delete-modal-container">
-          <button class="open-delete-modal" @click="openDeleteModal"><img src="@/assets/trash-icon.svg" alt=""></button>
+
+        <!-- Conditionally render delete button only if the task has an id -->
+        <div v-if="task.id" class="delete-modal-container">
+          <button class="open-delete-modal" @click="openDeleteModal"><img src="@/assets/trash-icon.svg" alt="Delete task"></button>
         </div>
       </div>
       <DeleteModal v-if="showDeleteModal" @confirmDelete="confirmDelete" @close="closeDeleteModal" />
@@ -70,7 +71,6 @@ const hasChanges = ref(false);
 const nameFocused = ref(false);
 const detailsFocused = ref(false);
 
-// Define focusInput method in the setup function
 const titleInput = ref(null);
 
 const focusInput = () => {
@@ -81,7 +81,6 @@ const focusInput = () => {
   });
 };
 
-// Ensure focusInput is exposed
 defineExpose({
   focusInput
 });
@@ -122,7 +121,6 @@ const enableScroll = () => {
   document.body.style.overflow = '';
 };
 
-
 watch(() => props.task, (newTask) => {
   Object.assign(task, newTask || { name: '', details: '', completed: false });
   Object.assign(originalTask.value, newTask || { name: '', details: '' });
@@ -130,10 +128,8 @@ watch(() => props.task, (newTask) => {
   disableScroll();
   hasChanges.value = false;
 
-  // Focus the input if the task is newly created (no id)
   if (!task.id) {
     nextTick(() => {
-      // Ensure the modal is fully visible
       requestAnimationFrame(() => {
         titleInput.value?.focusInput();
       });
@@ -165,7 +161,6 @@ const closeWithAnimation = () => {
   }, 300);
 };
 </script>
-
 
 <style scoped>
 .backdrop-main {
