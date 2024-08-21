@@ -1,21 +1,30 @@
 <!-- TaskContainer.vue -->
 <template>
-  <div class="task-container" 
-       :class="{'animate-task': animate, 'completed-task': isCompleted}"
-       @click="openModal">
+  <div
+    class="task-container"
+    :class="{'animate-task': animate, 'completed-task': isCompleted, 'completed-background': isCompleted}"
+    @click="openModal"
+  >
     <label class="custom-checkbox" @click.stop>
       <input type="checkbox" v-model="isCompleted" @change="markCompleted" />
-      <span class="checkmark"></span>
+      <span :class="{'checkmark': true, 'completed-checkmark': isCompleted}"></span>
     </label>
     <div class="task-text-container">
       <h3>{{ task.name }}</h3>
-      <p class="container-note-text">{{ task.details }}</p>
+      <p class="container-note-text">{{ truncatedDetails }}</p>
+    </div>
+    <div class="wrapper-task-marker">
+      <button class="marker-btn" @click.stop="toggleMarker">
+        <img :src="markerImage" alt="marker" />
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, watch } from 'vue';
+import { ref, toRefs, watch, computed } from 'vue';
+import marker1 from '@/assets/done-marker-1.svg';
+import marker2 from '@/assets/done-marker-2.svg';
 
 const props = defineProps({
   task: Object
@@ -25,6 +34,14 @@ const emit = defineEmits(['edit', 'complete']);
 const { task } = toRefs(props);
 const animate = ref(false);
 const isCompleted = ref(task.value.completed);
+
+// Ref to store the current marker image
+const markerImage = ref(marker1);
+
+// Toggle function to switch between images
+const toggleMarker = () => {
+  markerImage.value = markerImage.value === marker1 ? marker2 : marker1;
+};
 
 watch(isCompleted, (newVal) => {
   if (newVal !== task.value.completed) {
@@ -45,6 +62,14 @@ const markCompleted = () => {
     console.log('Animation ended');
   }, 500); // Adjust the duration to match your animation
 };
+
+// Computed property to limit the number of characters displayed
+const truncatedDetails = computed(() => {
+  const maxLength = 30; // Adjust this value as needed
+  return task.value.details.length > maxLength
+    ? task.value.details.slice(0, maxLength) + '...'
+    : task.value.details;
+});
 </script>
 
 <style scoped>
@@ -61,15 +86,23 @@ const markCompleted = () => {
   background-color: var(--clr-secondary-background);
 }
 
+.task-container.completed-background {
+  background-color: var(--clr-accent-200);
+}
+
 .task-container:hover {
   background-color: var(--clr-accent-200);
 }
 
 .task-text-container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .task-container h3 {
+  font-weight: 300;
   font-size: 1rem;
   margin-bottom: 0;
   line-height: 20px;
@@ -77,6 +110,7 @@ const markCompleted = () => {
 }
 
 .container-note-text {
+  font-size: .9rem;
   line-height: 1.2rem;
   color: var(--clr-main-100);
 }
@@ -91,30 +125,33 @@ const markCompleted = () => {
 }
 
 .custom-checkbox .checkmark {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   background-color: rgba(0, 0, 0, 0);
   border: 2px solid var(--clr-main-200);
   border-radius: 5px;
   position: relative;
-  transition: background-color 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.custom-checkbox input:checked + .checkmark {
-  background-color: rgba(0, 0, 0, 0);
-  border: 2px solid #000;
+.custom-checkbox .checkmark.completed-checkmark {
+  border-color: var(--clr-accent-100);
+}
+
+.task-container:hover .custom-checkbox .checkmark {
+  border-color: var(--clr-accent-100); /* Change border color on hover */
 }
 
 .custom-checkbox .checkmark::after {
   content: "";
   position: absolute;
   display: none;
-  left: 9px;
+  left: 11px;
   top: 5px;
-  width: 6px;
-  height: 12px;
-  border: solid #000;
-  border-width: 0 3px 3px 0;
+  width: 8px;
+  height: 16px;
+  border: solid var(--clr-accent-100);
+  border-width: 0 5px 5px 0;
   transform: rotate(45deg);
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -133,5 +170,24 @@ const markCompleted = () => {
 
 .completed-task {
   opacity: 0.5; /* Example styling for completed tasks */
+}
+
+.wrapper-task-marker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.marker-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.marker-btn img {
+  width: 24px;  /* Ensure consistent width */
+  height: 24px; /* Ensure consistent height */
+  display: block; /* Ensure no extra space around the image */
 }
 </style>

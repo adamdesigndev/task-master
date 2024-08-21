@@ -27,7 +27,7 @@ const currentTask = ref(null);
 const taskFilter = useTaskFilter();
 
 const openTaskModal = (task = null) => {
-  currentTask.value = task || { name: '', details: '', priority: 'Low', completed: false };
+  currentTask.value = task || { name: '', details: '', completed: false };
   showTaskModal.value = true;
 };
 

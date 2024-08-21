@@ -31,7 +31,7 @@ body {
 
   /* accent Colors */
   --clr-accent-100: #479A84;
-  --clr-accent-200: rgba(71, 154, 132, 1);
+  --clr-accent-200: rgba(71, 154, 132, .13);
   /* --clr-accent-200: rgba(71, 154, 132, .12); */
 
   /* delete Colors */
