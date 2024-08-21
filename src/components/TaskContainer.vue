@@ -29,18 +29,20 @@ import marker2 from '@/assets/done-marker-2.svg';
 const props = defineProps({
   task: Object
 });
-const emit = defineEmits(['edit', 'complete']);
+const emit = defineEmits(['edit', 'complete', 'toggle-mark']);
 
 const { task } = toRefs(props);
 const animate = ref(false);
 const isCompleted = ref(task.value.completed);
 
 // Ref to store the current marker image
-const markerImage = ref(marker1);
+const markerImage = ref(task.value.marked ? marker2 : marker1);
 
-// Toggle function to switch between images
+// Toggle function to switch between images and emit an event
 const toggleMarker = () => {
-  markerImage.value = markerImage.value === marker1 ? marker2 : marker1;
+  task.value.marked = !task.value.marked;
+  markerImage.value = task.value.marked ? marker2 : marker1;
+  emit('toggle-mark', task.value);
 };
 
 watch(isCompleted, (newVal) => {
@@ -71,6 +73,7 @@ const truncatedDetails = computed(() => {
     : task.value.details;
 });
 </script>
+
 
 <style scoped>
 .task-container {

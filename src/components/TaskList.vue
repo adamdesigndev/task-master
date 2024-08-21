@@ -8,6 +8,7 @@
         :task="task" 
         @edit="editTask" 
         @complete="completeTask" 
+        @toggle-mark="toggleMark" 
         />
       </div>
     </div>
@@ -27,7 +28,7 @@ const currentTask = ref(null);
 const taskFilter = useTaskFilter();
 
 const openTaskModal = (task = null) => {
-  currentTask.value = task || { name: '', details: '', completed: false };
+  currentTask.value = task || { name: '', details: '', completed: false, marked: false };
   showTaskModal.value = true;
 };
 
@@ -71,6 +72,20 @@ const completeTask = (task) => {
   saveTasksToLocalStorage();
 };
 
+// Toggle mark status and reorder the task list
+const toggleMark = (task) => {
+  const index = tasks.findIndex(t => t.id === task.id);
+  if (index !== -1) {
+    tasks.splice(index, 1); // Remove the task from its current position
+    if (task.marked) {
+      tasks.unshift(task); // Move task to the top if marked
+    } else {
+      tasks.push(task); // Move task to the end if unmarked
+    }
+  }
+  saveTasksToLocalStorage();
+};
+
 const saveTasksToLocalStorage = () => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 };
@@ -88,6 +103,7 @@ const filteredTasks = computed(() => {
 
 onMounted(loadTasksFromLocalStorage);
 </script>
+
 
 <style scoped>
 .task-list {
