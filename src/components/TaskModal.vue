@@ -14,6 +14,7 @@
           v-model="task.name" 
           maxlength="30" 
           :focused="nameFocused" 
+          ref="titleInput"
           @focus="nameFocused = true" 
           @blur="nameFocused = false"
           @input="markAsChanged"
@@ -41,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, onUnmounted, computed } from 'vue';
+import { ref, reactive, watch, onMounted, onUnmounted, computed, nextTick } from 'vue';
 import ModalAnimation from './ModalAnimation.vue';
 import ModalHeader from './ModalHeader.vue';
 import FormInput from './FormInput.vue';
@@ -68,6 +69,22 @@ const hasChanges = ref(false);
 
 const nameFocused = ref(false);
 const detailsFocused = ref(false);
+
+// Define focusInput method in the setup function
+const titleInput = ref(null);
+
+const focusInput = () => {
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      titleInput.value?.focusInput();
+    });
+  });
+};
+
+// Ensure focusInput is exposed
+defineExpose({
+  focusInput
+});
 
 const markAsChanged = () => {
   hasChanges.value = true;
@@ -105,12 +122,23 @@ const enableScroll = () => {
   document.body.style.overflow = '';
 };
 
+
 watch(() => props.task, (newTask) => {
   Object.assign(task, newTask || { name: '', details: '', completed: false });
   Object.assign(originalTask.value, newTask || { name: '', details: '' });
   visible.value = true;
   disableScroll();
   hasChanges.value = false;
+
+  // Focus the input if the task is newly created (no id)
+  if (!task.id) {
+    nextTick(() => {
+      // Ensure the modal is fully visible
+      requestAnimationFrame(() => {
+        titleInput.value?.focusInput();
+      });
+    });
+  }
 });
 
 onMounted(() => {

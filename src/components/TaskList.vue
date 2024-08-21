@@ -1,14 +1,22 @@
 <!-- TaskList.vue -->
 <template>
   <div class="task-list">
-    <TaskModal v-if="showTaskModal" @close="closeTaskModal" @save="saveTask" @delete="deleteTask" :task="currentTask" />
+    <!-- Add ref to TaskModal -->
+    <TaskModal
+      v-if="showTaskModal"
+      @close="closeTaskModal"
+      @save="saveTask"
+      @delete="deleteTask"
+      :task="currentTask"
+      ref="taskModalRef"
+    />
     <div>
       <div v-for="task in filteredTasks" :key="task.id" class="task-wrapper">
         <TaskContainer 
-        :task="task" 
-        @edit="editTask" 
-        @complete="completeTask" 
-        @toggle-mark="toggleMark" 
+          :task="task" 
+          @edit="editTask" 
+          @complete="completeTask" 
+          @toggle-mark="toggleMark" 
         />
       </div>
     </div>
@@ -17,7 +25,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted } from 'vue';
+import { reactive, ref, computed, onMounted, nextTick } from 'vue';
 import TaskModal from './TaskModal.vue';
 import TaskContainer from './TaskContainer.vue';
 import { useTaskFilter } from '@/composables/useTaskFilter';
@@ -27,9 +35,21 @@ const showTaskModal = ref(false);
 const currentTask = ref(null);
 const taskFilter = useTaskFilter();
 
+// Add a ref for the TaskModal component
+const taskModalRef = ref(null);
+
 const openTaskModal = (task = null) => {
   currentTask.value = task || { name: '', details: '', completed: false, marked: false };
   showTaskModal.value = true;
+
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      // Use the correct ref
+      if (taskModalRef.value && !currentTask.value.id) {
+        taskModalRef.value.focusInput();
+      }
+    });
+  });
 };
 
 const closeTaskModal = () => {

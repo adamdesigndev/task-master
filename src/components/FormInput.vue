@@ -14,13 +14,13 @@
       @blur="blur"
       @input="updateValue"
       :rows="textarea ? 2 : undefined"
+      ref="inputElement"
     />
     <div class="char-limit-indicator" v-if="focused">
       {{ modelValue.length }}/{{ maxlength }}
     </div>
   </div>
 </template>
-
 
 <script setup>
 import { ref } from 'vue';
@@ -29,20 +29,32 @@ const props = defineProps(['label', 'placeholder', 'maxlength', 'textarea', 'mod
 const emit = defineEmits(['update:modelValue', 'focus', 'blur', 'input']);
 
 const focused = ref(false);
+const inputElement = ref(null);
 
 const focus = () => {
   focused.value = true;
   emit('focus');
 };
+
 const blur = () => {
   focused.value = false;
   emit('blur');
 };
+
 const updateValue = (event) => {
   emit('update:modelValue', event.target.value);
   emit('input', event);
 };
+
+const focusInput = () => {
+  inputElement.value?.focus();
+};
+
+defineExpose({
+  focusInput
+});
 </script>
+
 
 <style scoped>
 .form-inner-single-container {
