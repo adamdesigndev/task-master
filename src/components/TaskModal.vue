@@ -10,7 +10,7 @@
         
         <FormInput 
           label="" 
-          placeholder="Enter task..." 
+          placeholder="Enter task" 
           v-model="task.name" 
           maxlength="30" 
           :focused="nameFocused" 
@@ -21,9 +21,9 @@
         
         <FormInput 
           label="" 
-          placeholder="Extra notes..." 
+          placeholder="Add note" 
           v-model="task.details" 
-          maxlength="65" 
+          maxlength="50" 
           textarea
           :focused="detailsFocused" 
           @focus="detailsFocused = true" 
@@ -175,13 +175,13 @@ const closeWithAnimation = () => {
 
 .modal-form {
   background: var(--clr-secondary-background);
-  padding: 20px;
-  border-radius: 2rem 2rem 0 0;
+  padding: 1rem;
+  border-radius: 12px 12px 0 0;
   width: 100%;
   max-width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 1rem;
 }
 
 .delete-modal-container {

@@ -49,7 +49,7 @@ const updateValue = (event) => {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0rem;
 }
 
 .modal-label {
@@ -62,11 +62,13 @@ const updateValue = (event) => {
 .title-input, .note-input {
   background-color: rgba(0, 0, 0, 0);
   border: none;
+  outline: none; /* Remove the outline that appears on focus */
   padding: 0px;
   border-radius: 5px;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-family: Arial, sans-serif;
   color: var(--clr-main-100);
+  caret-color: var(--clr-accent-100);
 }
 
 .note-input {
@@ -79,7 +81,7 @@ const updateValue = (event) => {
   bottom: -1.5rem;
   right: 0;
   font-size: 0.8rem;
-  color: black;
+  color: var(--clr-main-100);
 }
 
 .updated-label {

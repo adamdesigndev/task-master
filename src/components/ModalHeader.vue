@@ -29,10 +29,9 @@
   }
   
   .modal-save-btn {
-    color: #4a9b1b;
-    font-size: 1.2rem;
-    letter-spacing: .05rem;
-    font-weight: 600;
+    color: var(--clr-accent-100);
+    font-size: 1rem;
+    font-weight: 300;
     border: none;
     padding: .1rem;
     background: none;

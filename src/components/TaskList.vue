@@ -129,6 +129,6 @@ onMounted(loadTasksFromLocalStorage);
 }
 
 .task-wrapper {
-  margin-bottom: 10px;
+  margin-bottom: .4rem;
 }
 </style>

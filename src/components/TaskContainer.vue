@@ -77,7 +77,7 @@ const truncatedDetails = computed(() => {
 
 <style scoped>
 .task-container {
-  margin-bottom: 10px;
+  margin-bottom: 0rem;
   padding: 12px;
   display: flex;
   border-radius: 10px;
@@ -113,7 +113,8 @@ const truncatedDetails = computed(() => {
 }
 
 .container-note-text {
-  font-size: .9rem;
+  font-size: .8rem;
+  letter-spacing: .05rem;
   line-height: 1.2rem;
   color: var(--clr-main-100);
 }
@@ -185,7 +186,7 @@ const truncatedDetails = computed(() => {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: .5rem;
 }
 
 .marker-btn img {
