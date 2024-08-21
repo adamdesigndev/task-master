@@ -44,7 +44,7 @@ onMounted(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: black;
+  background: var(--clr-accent-200);
   display: flex;
   justify-content: center;
   align-items: center;

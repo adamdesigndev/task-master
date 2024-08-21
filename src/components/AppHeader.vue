@@ -1,11 +1,11 @@
 <!-- AppHeader.vue -->
 <template>
   <header class="sticky-header">
-    <img class="header-logo" src="@/assets/done-logo.svg" alt="Logo">
+    <img class="header-logo" src="@/assets/dun-logo.svg" alt="Logo">
     <div class="menu-container">
       <span v-if="isFilterOn" class="filter-label">Filtered by: Completed</span>
       <button class="header-menu-btn" @click="toggleMenu">
-        <img class="menu-icon" src="@/assets/menu-icon.svg" alt="Menu">
+        <img class="menu-icon" src="@/assets/dun-menu-icon.svg" alt="Menu">
       </button>
       <DropdownMenu v-if="showMenu" 
       @showActiveTasks="showActiveTasks" 
@@ -82,8 +82,7 @@ onBeforeUnmount(() => {
 }
 
 .menu-icon {
-  height: 1.8rem;
-  width: 1.8rem;
+  height: 1rem;
 }
 
 .sticky-header {
@@ -95,7 +94,7 @@ onBeforeUnmount(() => {
   top: 0;
   background-color: var(--clr-background);
   z-index: 1000;
-  padding: 1rem 0rem;
+  padding: 0rem 0rem 1rem 0rem;
 }
 
 .menu-container {

@@ -1,7 +1,7 @@
 <template>
     <div class="form-header-outer-container">
       <div class="form-header">
-        <button @click="close" class="back-button"><img src="@/assets/back-icon.svg" alt=""></button>
+        <button @click="close" class="back-button"><img src="@/assets/done-back.png" alt=""></button>
       </div>
       <button 
         v-if="hasChanges && isTitleFilled" 
@@ -52,7 +52,7 @@
   }
   
   .back-button img {
-    height: 1.2rem;
+    height: 1rem;
   }
   </style>
   

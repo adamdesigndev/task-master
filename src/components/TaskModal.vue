@@ -5,7 +5,7 @@
   </transition>
   <ModalAnimation>
     <div v-if="visible" class="modal" @click.self="handleClose">
-      <div class="modal-form">
+      <div class="modal-form" :style="{ paddingBottom: modalPaddingBottom }">
         <ModalHeader :hasChanges="hasChanges" :isTitleFilled="isTitleFilled" @close="handleClose" @save="handleSave" />
         
         <FormInput 
@@ -154,6 +154,11 @@ watch(visible, (newVal) => {
 
 const isTitleFilled = computed(() => task.name.trim().length > 0);
 
+// Computed property to dynamically set padding
+const modalPaddingBottom = computed(() => {
+  return task.id ? '1rem' : '2.5rem'; // Adjust these values as necessary
+});
+
 const closeWithAnimation = () => {
   visible.value = false;
   setTimeout(() => {
@@ -161,6 +166,7 @@ const closeWithAnimation = () => {
   }, 300);
 };
 </script>
+
 
 <style scoped>
 .backdrop-main {
@@ -207,9 +213,18 @@ const closeWithAnimation = () => {
   gap: 1rem;
 }
 
+.modal-form-new-task {
+  padding-bottom: 2rem; /* More padding for new tasks */
+}
+
+.modal-form-existing-task {
+  padding-bottom: 1rem; /* Default padding for existing tasks */
+}
+
 .delete-modal-container {
   display: flex;
   justify-content: right;
+  margin-top: 1rem;
 }
 
 .open-delete-modal {
