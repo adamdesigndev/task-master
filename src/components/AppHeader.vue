@@ -3,15 +3,21 @@
   <header class="sticky-header">
     <img class="header-logo" src="@/assets/dun-logo.svg" alt="Logo">
     <div class="menu-container">
-      <span v-if="isFilterOn" class="filter-label">Filtered by: Completed</span>
       <button class="header-menu-btn" @click="toggleMenu">
         <img class="menu-icon" src="@/assets/dun-menu-icon.svg" alt="Menu">
       </button>
       <DropdownMenu v-if="showMenu" 
-      @showActiveTasks="showActiveTasks" 
-      @showCompletedTasks="showCompletedTasks" />
+                    @showActiveTasks="showActiveTasks" 
+                    @showCompletedTasks="showCompletedTasks" />
     </div>
   </header>
+  
+  <div v-if="isFilterOn" class="wrapper-filtered-by">
+    <div class="wrapper-filter-text-btn">
+      <p>Filtered by: Completed</p>
+      <button @click="clearFilter">&#x2715;</button>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -49,6 +55,10 @@ const showCompletedTasks = () => {
   isFilterOn.value = true;
   showMenu.value = false;
   activeMenu.value = null;
+};
+
+const clearFilter = () => {
+  showActiveTasks();
 };
 
 const handleClickOutside = (event) => {
@@ -104,10 +114,32 @@ onBeforeUnmount(() => {
   gap: 1rem;
 }
 
-.filter-label {
+.wrapper-filtered-by {
+  display: flex;
+  flex-direction: row;
+}
+
+.wrapper-filter-text-btn {
+  display: flex;
+  flex-direction: row;
+  gap: .8rem;
+  background-color: var(--clr-accent-200);
+  padding: .1rem .5rem;
+  border-radius: 5px;
+}
+
+.wrapper-filter-text-btn p {
   font-size: .8rem;
-  letter-spacing: 0.08rem;
-  font-weight: 500;
-  color: #fff;
+  color: var(--clr-accent-100);
+  text-align: left;
+  letter-spacing: 0.05rem;
+}
+
+.wrapper-filter-text-btn button {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  color: var(--clr-accent-100);
+  padding: .1rem;
+  cursor: pointer;
 }
 </style>
