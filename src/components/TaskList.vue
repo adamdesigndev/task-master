@@ -11,7 +11,12 @@
       ref="taskModalRef"
     />
     <div>
-      <transition-group name="list" tag="div">
+      <transition-group 
+        name="list" 
+        tag="div"
+        @before-leave="beforeLeave"
+        @leave="leave"
+      >
         <div v-for="task in filteredTasks" :key="task.id" class="task-wrapper">
           <TaskContainer 
             :task="task" 
@@ -123,10 +128,23 @@ const filteredTasks = computed(() => {
   return taskFilter.value === 'active' ? tasks.filter(t => !t.completed) : tasks.filter(t => t.completed);
 });
 
+const beforeLeave = (el) => {
+  const height = el.offsetHeight;
+  el.style.height = `${height}px`;
+  el.style.transition = 'height 0.5s ease';
+};
+
+const leave = (el) => {
+  setTimeout(() => {
+    el.style.height = '0';
+    el.style.marginBottom = '0';
+    el.style.padding = '0';
+  }, 0);
+};
+
 onMounted(loadTasksFromLocalStorage);
 </script>
 
-<!-- TaskList.vue -->
 <style scoped>
 .task-list {
   flex: 1;
@@ -152,11 +170,11 @@ onMounted(loadTasksFromLocalStorage);
 
 .task-wrapper {
   margin-bottom: .4rem;
-  transition: opacity 0.3s ease; /* Updated to only transition opacity */
+  transition: height 0.5s ease, margin-bottom 0.5s ease, padding 0.5s ease;
 }
 
 .list-enter-active, .list-leave-active {
-  transition: opacity 0.3s ease; /* Updated to only transition opacity */
+  transition: opacity 0.3s ease, height 0.5s ease, margin-bottom 0.5s ease, padding 0.5s ease;
 }
 
 .list-enter-from, .list-leave-to {
