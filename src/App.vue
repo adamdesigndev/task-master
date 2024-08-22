@@ -2,8 +2,8 @@
 <template>
   <div id="app-wrapper">
     <LoadingScreen v-if="isLoading" @loading-complete="handleLoadingScreenComplete" />
-    <AppHeader v-if="!isLoading" />
-    <div v-if="!isLoading">
+    <div :class="{'app-content-visible': !isLoading, 'app-content-hidden': isLoading}">
+      <AppHeader />
       <TaskList @delete-task="handleDeleteTask" />
     </div>
   </div>
@@ -36,5 +36,14 @@ const handleDeleteTask = (taskId) => {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+}
+
+.app-content-visible {
+  opacity: 1;
+  transition: opacity 0.5s ease; /* Matches the loading screen fade-out duration */
+}
+
+.app-content-hidden {
+  opacity: 0;
 }
 </style>

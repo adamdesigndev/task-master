@@ -15,7 +15,7 @@
   <div v-if="isFilterOn" class="wrapper-filtered-by">
     <div class="wrapper-filter-text-btn">
       <p>Filtered by: Completed</p>
-      <button @click="clearFilter">&#x2715;</button>
+      <button @click="clearFilter"><img src="@/assets/dun-x-icon.svg" alt="x"></button>
     </div>
   </div>
 </template>
@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
 }
 
 .wrapper-filter-text-btn p {
-  font-size: .8rem;
+  font-size: 1rem;
   color: var(--clr-accent-100);
   text-align: left;
   letter-spacing: 0.05rem;
@@ -141,5 +141,8 @@ onBeforeUnmount(() => {
   color: var(--clr-accent-100);
   padding: .1rem;
   cursor: pointer;
+}
+.wrapper-filter-text-btn button img{
+  height: .7rem;
 }
 </style>

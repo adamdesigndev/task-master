@@ -22,7 +22,7 @@ const onAfterLeave = () => {
 onMounted(() => {
   setTimeout(() => {
     isVisible.value = false;
-  }, 1500); // Adjust this time to match the duration you want the logo to be visible
+  }, 1000); // This duration controls how long the loading screen is visible
 });
 </script>
 
@@ -41,7 +41,7 @@ onMounted(() => {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s ease; /* Adjust the duration for fading */
+  transition: opacity 0.5s ease; /* This duration matches the app content transition */
 }
 
 .fade-enter, .fade-leave-to {
@@ -55,7 +55,6 @@ onMounted(() => {
 }
 
 .loading-logo {
-  
   width: 100px;
   height: 100px;
 }
