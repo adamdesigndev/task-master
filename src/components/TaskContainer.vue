@@ -99,7 +99,8 @@ const truncatedDetails = computed(() => {
   background-color: var(--clr-accent-200);
 }
 
-.task-container:hover {
+/* Hover effect only on non-touch devices */
+.non-touch-device .task-container:hover {
   background-color: var(--clr-accent-200);
 }
 
@@ -146,10 +147,6 @@ const truncatedDetails = computed(() => {
 
 .custom-checkbox .checkmark.completed-checkmark {
   border-color: var(--clr-accent-100);
-}
-
-.task-container:hover .custom-checkbox .checkmark {
-  border-color: var(--clr-accent-100); /* Change border color on hover */
 }
 
 .custom-checkbox .checkmark::after {
