@@ -22,7 +22,7 @@ const onAfterLeave = () => {
 onMounted(() => {
   setTimeout(() => {
     isVisible.value = false;
-  }, 1000); // This duration controls how long the loading screen is visible
+  }, 1000); // Adjust this duration as needed
 });
 </script>
 
@@ -33,17 +33,18 @@ onMounted(() => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: var(--clr-accent-200);
+  background: #182222;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align items at the top */
+  align-items: flex-start;
+  z-index: 9999; /* Ensures the loading screen is above all content */
 }
 
 .logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translateY(30vh); /* Move the logo down by 25% of the viewport height */
+  transform: translateY(30vh); /* Adjust this value as needed */
 }
 
 .loading-logo {
@@ -52,7 +53,7 @@ onMounted(() => {
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.2s ease; /* This duration matches the app content transition */
+  transition: opacity 0.3s ease; /* Adjust fade-out duration as needed */
 }
 
 .fade-enter, .fade-leave-to {

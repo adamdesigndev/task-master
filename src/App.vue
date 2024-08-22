@@ -2,7 +2,7 @@
 <template>
   <div id="app-wrapper">
     <LoadingScreen v-if="isLoading" @loading-complete="handleLoadingScreenComplete" />
-    <div :class="{'app-content-visible': !isLoading, 'app-content-hidden': isLoading}">
+    <div class="app-content">
       <AppHeader />
       <TaskList @delete-task="handleDeleteTask" />
     </div>
@@ -20,11 +20,6 @@ const isLoading = ref(true);
 const handleLoadingScreenComplete = () => {
   isLoading.value = false;
 };
-
-const handleDeleteTask = (taskId) => {
-  // Logic to delete the task from your task list
-  console.log(`Delete task with id: ${taskId}`);
-};
 </script>
 
 <style scoped>
@@ -36,14 +31,11 @@ const handleDeleteTask = (taskId) => {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
-.app-content-visible {
+.app-content {
   opacity: 1;
-  transition: opacity 0.5s ease; /* Matches the loading screen fade-out duration */
-}
-
-.app-content-hidden {
-  opacity: 0;
+  transition: opacity 0.5s ease; /* Match the loading screen fade-out duration */
 }
 </style>
