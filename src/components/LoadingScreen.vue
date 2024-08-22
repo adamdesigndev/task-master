@@ -36,26 +36,26 @@ onMounted(() => {
   background: var(--clr-accent-200);
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease; /* This duration matches the app content transition */
-}
-
-.fade-enter, .fade-leave-to {
-  opacity: 0;
+  align-items: flex-start; /* Align items at the top */
 }
 
 .logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: translateY(30vh); /* Move the logo down by 25% of the viewport height */
 }
 
 .loading-logo {
   width: 100px;
   height: 100px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease; /* This duration matches the app content transition */
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -96,7 +96,22 @@ const completeTask = (task) => {
   const index = tasks.findIndex(t => t.id === task.id);
   if (index !== -1) {
     tasks[index].completed = task.completed;
-    tasks.push(tasks.splice(index, 1)[0]); // Move the task to the end of the list to ensure reactivity
+
+    // Remove the task from its current position
+    const [movedTask] = tasks.splice(index, 1);
+
+    if (task.completed) {
+      // If the task is completed, push it to the end of the list
+      tasks.push(movedTask);
+    } else {
+      // If the task is reactivated and marked, move it to the top
+      if (task.marked) {
+        tasks.unshift(movedTask);
+      } else {
+        // Move task to the end if unmarked
+        tasks.push(movedTask);
+      }
+    }
   }
   saveTasksToLocalStorage();
 };
@@ -105,11 +120,15 @@ const completeTask = (task) => {
 const toggleMark = (task) => {
   const index = tasks.findIndex(t => t.id === task.id);
   if (index !== -1) {
-    tasks.splice(index, 1); // Remove the task from its current position
+    // Remove the task from its current position
+    const [movedTask] = tasks.splice(index, 1);
+
     if (task.marked) {
-      tasks.unshift(task); // Move task to the top if marked
+      // Move task to the top if marked
+      tasks.unshift(movedTask);
     } else {
-      tasks.push(task); // Move task to the end if unmarked
+      // Move task to the end if unmarked
+      tasks.push(movedTask);
     }
   }
   saveTasksToLocalStorage();
