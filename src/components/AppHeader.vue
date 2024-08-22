@@ -123,6 +123,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: row;
   align-items: center;
+  align-content: center;
   gap: .8rem;
   background-color: var(--clr-accent-200);
   padding: .1rem .5rem;
@@ -142,8 +143,14 @@ onBeforeUnmount(() => {
   color: var(--clr-accent-100);
   padding: .1rem;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
 }
 .wrapper-filter-text-btn button img{
   height: .7rem;
+  display: block;
 }
 </style>
