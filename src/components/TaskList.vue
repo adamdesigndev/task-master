@@ -16,6 +16,7 @@
         tag="div"
         @before-leave="beforeLeave"
         @leave="leave"
+        :css="!isFiltering"
       >
         <div v-for="task in filteredTasks" :key="task.id" class="task-wrapper">
           <TaskContainer 
@@ -32,7 +33,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted, nextTick } from 'vue';
+import { reactive, ref, computed, onMounted, nextTick, watch } from 'vue';
 import TaskModal from './TaskModal.vue';
 import TaskContainer from './TaskContainer.vue';
 import { useTaskFilter } from '@/composables/useTaskFilter';
@@ -41,6 +42,7 @@ const tasks = reactive([]);
 const showTaskModal = ref(false);
 const currentTask = ref(null);
 const taskFilter = useTaskFilter();
+const isFiltering = ref(false);
 
 // Add a ref for the TaskModal component
 const taskModalRef = ref(null);
@@ -141,6 +143,14 @@ const leave = (el) => {
     el.style.padding = '0';
   }, 0);
 };
+
+// Watch the filter and toggle the isFiltering flag
+watch(taskFilter, () => {
+  isFiltering.value = true;
+  nextTick(() => {
+    isFiltering.value = false;
+  });
+});
 
 onMounted(loadTasksFromLocalStorage);
 </script>
