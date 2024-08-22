@@ -148,7 +148,7 @@ onMounted(loadTasksFromLocalStorage);
 <style scoped>
 .task-list {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: hidden; /* Prevent any overflow during transition */
   padding: .3rem 0px 60px 0px;
 }
 
