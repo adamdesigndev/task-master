@@ -122,6 +122,7 @@ onBeforeUnmount(() => {
 .wrapper-filter-text-btn {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: .8rem;
   background-color: var(--clr-accent-200);
   padding: .1rem .5rem;

@@ -11,14 +11,16 @@
       ref="taskModalRef"
     />
     <div>
-      <div v-for="task in filteredTasks" :key="task.id" class="task-wrapper">
-        <TaskContainer 
-          :task="task" 
-          @edit="editTask" 
-          @complete="completeTask" 
-          @toggle-mark="toggleMark" 
-        />
-      </div>
+      <transition-group name="list" tag="div">
+        <div v-for="task in filteredTasks" :key="task.id" class="task-wrapper">
+          <TaskContainer 
+            :task="task" 
+            @edit="editTask" 
+            @complete="completeTask" 
+            @toggle-mark="toggleMark" 
+          />
+        </div>
+      </transition-group>
     </div>
     <button class="add-task-button" @click="openTaskModal"><img src="@/assets/add-button.svg" alt="add button"></button>
   </div>
@@ -124,7 +126,6 @@ const filteredTasks = computed(() => {
 onMounted(loadTasksFromLocalStorage);
 </script>
 
-
 <style scoped>
 .task-list {
   flex: 1;
@@ -150,5 +151,15 @@ onMounted(loadTasksFromLocalStorage);
 
 .task-wrapper {
   margin-bottom: .4rem;
+  transition: all 0.3s ease;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 0.3s ease;
+}
+
+.list-enter-from, .list-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>

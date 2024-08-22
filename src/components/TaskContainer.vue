@@ -3,6 +3,7 @@
   <div
     class="task-container"
     :class="{'animate-task': animate, 'completed-task': isCompleted, 'completed-background': isCompleted}"
+    @animationend="onAnimationEnd"
     @click="openModal"
   >
     <label class="custom-checkbox" @click.stop>
@@ -57,12 +58,16 @@ const openModal = () => {
 
 const markCompleted = () => {
   animate.value = true;
-  console.log('Animation started');
   setTimeout(() => {
     emit('complete', { ...task.value, completed: isCompleted.value }); // Emit complete event after animation
-    animate.value = false;
-    console.log('Animation ended');
   }, 500); // Adjust the duration to match your animation
+};
+
+// Method to handle the animation end event
+const onAnimationEnd = () => {
+  if (isCompleted.value) {
+    emit('complete', { ...task.value, completed: true });
+  }
 };
 
 // Computed property to limit the number of characters displayed
@@ -73,7 +78,6 @@ const truncatedDetails = computed(() => {
     : task.value.details;
 });
 </script>
-
 
 <style scoped>
 .task-container {
@@ -87,6 +91,7 @@ const truncatedDetails = computed(() => {
   transition: all 0.5s ease;
   cursor: pointer;
   background-color: var(--clr-secondary-background);
+  border: 1px solid transparent;
 }
 
 .task-container.completed-background {
@@ -166,14 +171,37 @@ const truncatedDetails = computed(() => {
   opacity: 1;
 }
 
-/* Only apply animation to task-container when animate is true */
+/* Animation for task-container when marked as completed */
 .animate-task {
-  transform: translateY(-5px); /* Move the container up 5px */
-  opacity: 0; /* Fade out */
+  animation: borderFade 1.5s forwards, fadeOut 0.5s 1.5s forwards;
 }
 
-.completed-task {
-  opacity: 0.5; /* Example styling for completed tasks */
+/* Keyframes for the fade out */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+/* Keyframes for the border fade in */
+@keyframes borderFade {
+  0% {
+    border-color: transparent;
+  }
+  70% {
+    border-color: var(--clr-accent-100);
+  }
+  100% {
+    border-color: var(--clr-accent-200);
+  }
 }
 
 .wrapper-task-marker {
