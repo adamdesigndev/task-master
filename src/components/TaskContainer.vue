@@ -6,6 +6,7 @@
     @animationend="onAnimationEnd"
     @click="openModal"
   >
+    <!-- Checkbox and other task details -->
     <label class="custom-checkbox" @click.stop>
       <input type="checkbox" v-model="isCompleted" @change="markCompleted" />
       <span :class="{'checkmark': true, 'completed-checkmark': isCompleted}"></span>
@@ -180,14 +181,12 @@ const truncatedDetails = computed(() => {
 @keyframes fadeOut {
   0% {
     opacity: 1;
-    transform: translateY(0);
   }
   50% {
     opacity: 0.5;
   }
   100% {
     opacity: 0;
-    transform: translateY(-5px);
   }
 }
 
