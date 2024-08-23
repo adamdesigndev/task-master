@@ -31,7 +31,7 @@
   .modal-save-btn {
     color: var(--clr-accent-100);
     font-size: 1rem;
-    font-weight: 300;
+    font-weight: 400;
     border: none;
     padding: .1rem;
     background: none;

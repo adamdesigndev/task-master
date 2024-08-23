@@ -9,7 +9,7 @@
         <ModalHeader :hasChanges="hasChanges" :isTitleFilled="isTitleFilled" @close="handleClose" @save="handleSave" />
         
         <FormInput 
-          label="" 
+          label="Task" 
           placeholder="Enter task" 
           v-model="task.name" 
           maxlength="30" 
@@ -21,7 +21,7 @@
         />
         
         <FormInput 
-          label="" 
+          label="Notes" 
           placeholder="Add note" 
           v-model="task.details" 
           maxlength="50" 
@@ -54,14 +54,16 @@ const emit = defineEmits(['close', 'save', 'delete']);
 
 const originalTask = ref({
   name: props.task?.name || '',
-  details: props.task?.details || ''
+  details: props.task?.details || '',
+  marked: props.task?.marked || false // Include marked status
 });
 
 const task = reactive({
   id: props.task?.id || null,
   name: props.task?.name || '',
   details: props.task?.details || '',
-  completed: props.task?.completed || false
+  completed: props.task?.completed || false,
+  marked: props.task?.marked || false // Include marked status
 });
 
 const visible = ref(false);
@@ -122,8 +124,8 @@ const enableScroll = () => {
 };
 
 watch(() => props.task, (newTask) => {
-  Object.assign(task, newTask || { name: '', details: '', completed: false });
-  Object.assign(originalTask.value, newTask || { name: '', details: '' });
+  Object.assign(task, newTask || { name: '', details: '', completed: false, marked: false }); // Preserve marked status
+  Object.assign(originalTask.value, newTask || { name: '', details: '', marked: false });
   visible.value = true;
   disableScroll();
   hasChanges.value = false;

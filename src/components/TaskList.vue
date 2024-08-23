@@ -183,6 +183,7 @@ watch(taskFilter, () => {
 onMounted(loadTasksFromLocalStorage);
 </script>
 
+
 <style scoped>
 .task-list {
   flex: 1;

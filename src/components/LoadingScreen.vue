@@ -22,7 +22,7 @@ const onAfterLeave = () => {
 onMounted(() => {
   setTimeout(() => {
     isVisible.value = false;
-  }, 1000); // Adjust this duration as needed
+  }, 1250); // Adjust this duration as needed
 });
 </script>
 
@@ -48,8 +48,8 @@ onMounted(() => {
 }
 
 .loading-logo {
-  width: 100px;
-  height: 100px;
+  width: 125px;
+  height: 125px;
 }
 
 .fade-enter-active, .fade-leave-active {

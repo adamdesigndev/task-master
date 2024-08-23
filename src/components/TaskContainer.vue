@@ -80,6 +80,7 @@ const truncatedDetails = computed(() => {
 });
 </script>
 
+
 <style scoped>
 .task-container {
   margin-bottom: 0rem;

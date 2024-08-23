@@ -65,10 +65,10 @@ defineExpose({
 }
 
 .modal-label {
-  font-size: .9rem;
-  font-weight: 600;
-  letter-spacing: 0.07rem;
-  color: var();
+  font-size: .75rem;
+  font-weight: 300;
+  letter-spacing: 0.09rem;
+  color: var(--clr-main-100);
 }
 
 .title-input, .note-input {
@@ -77,7 +77,7 @@ defineExpose({
   outline: none; /* Remove the outline that appears on focus */
   padding: 0px;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-family: Arial, sans-serif;
   color: var(--clr-main-100);
   caret-color: var(--clr-accent-100);
