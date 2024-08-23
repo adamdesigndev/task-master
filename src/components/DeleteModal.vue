@@ -52,7 +52,7 @@
   
   .confirm-delete {
     border: none;
-    background: #F10C49;
+    background: #D7023B;
     color: #fff;
   }
   

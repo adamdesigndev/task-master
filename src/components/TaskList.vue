@@ -48,7 +48,7 @@ const isFiltering = ref(false);
 const taskModalRef = ref(null);
 
 const openTaskModal = (task = null) => {
-  currentTask.value = task || { name: '', details: '', completed: false, marked: false };
+  currentTask.value = task || { id: null, name: '', details: '', completed: false, marked: false };
   showTaskModal.value = true;
 
   nextTick(() => {
@@ -73,6 +73,7 @@ const saveTask = (task) => {
       tasks[index] = task;
     }
   } else {
+    // Assign a unique ID using Date.now()
     task.id = Date.now();
     tasks.push(task);
   }
@@ -146,7 +147,15 @@ const loadTasksFromLocalStorage = () => {
 };
 
 const filteredTasks = computed(() => {
-  return taskFilter.value === 'active' ? tasks.filter(t => !t.completed) : tasks.filter(t => t.completed);
+  // First, filter tasks based on the current filter (active/completed)
+  const filtered = taskFilter.value === 'active' ? tasks.filter(t => !t.completed) : tasks.filter(t => t.completed);
+
+  // Then, sort by marked status and ID (newest to oldest)
+  return filtered.sort((a, b) => {
+    if (a.marked && !b.marked) return -1; // Marked tasks come first
+    if (!a.marked && b.marked) return 1;  // Unmarked tasks come later
+    return b.id - a.id; // Within marked or unmarked, sort by ID (newest first)
+  });
 });
 
 const beforeLeave = (el) => {
