@@ -66,8 +66,8 @@ defineExpose({
 
 .modal-label {
   font-size: .9rem;
-  font-weight: 300;
-  letter-spacing: 0.09rem;
+  font-weight: 400;
+  letter-spacing: 0.08rem;
   color: var(--clr-main-200);
 }
 

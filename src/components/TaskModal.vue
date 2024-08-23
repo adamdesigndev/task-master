@@ -12,7 +12,7 @@
           label="Task" 
           placeholder="Enter task" 
           v-model="task.name" 
-          maxlength="30" 
+          maxlength="25" 
           :focused="nameFocused" 
           ref="titleInput"
           @focus="nameFocused = true" 
@@ -24,7 +24,7 @@
           label="Notes" 
           placeholder="Add note" 
           v-model="task.details" 
-          maxlength="50" 
+          maxlength="25" 
           textarea
           :focused="detailsFocused" 
           @focus="detailsFocused = true" 
