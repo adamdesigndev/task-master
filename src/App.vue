@@ -36,6 +36,6 @@ const handleLoadingScreenComplete = () => {
 
 .app-content {
   opacity: 1;
-  transition: opacity 0.5s ease; /* Match the loading screen fade-out duration */
+  transition: opacity 0.5s ease;
 }
 </style>

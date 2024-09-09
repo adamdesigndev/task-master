@@ -1,7 +1,7 @@
 <!-- TaskList.vue -->
 <template>
   <div class="task-list">
-    <!-- Add ref to TaskModal -->
+    <!-- Modal for adding/editing tasks; displayed conditionally based on showTaskModal -->
     <TaskModal
       v-if="showTaskModal"
       @close="closeTaskModal"
@@ -10,6 +10,8 @@
       :task="currentTask"
       ref="taskModalRef"
     />
+
+    <!-- Transition group for animating task list changes -->
     <div>
       <transition-group 
         name="list" 
@@ -18,6 +20,7 @@
         @leave="leave"
         :css="!isFiltering"
       >
+        <!-- Loop through filtered tasks and render each task using TaskContainer -->
         <div v-for="task in filteredTasks" :key="task.id" class="task-wrapper">
           <TaskContainer 
             :task="task" 
@@ -28,7 +31,11 @@
         </div>
       </transition-group>
     </div>
-    <button class="add-task-button" @click="openTaskModal"><img src="@/assets/add-button.svg" alt="add button"></button>
+
+    <!-- Button to open the task modal for adding a new task -->
+    <button class="add-task-button" @click="openTaskModal">
+      <img src="@/assets/add-button.svg" alt="add button">
+    </button>
   </div>
 </template>
 
@@ -38,22 +45,27 @@ import TaskModal from './TaskModal.vue';
 import TaskContainer from './TaskContainer.vue';
 import { useTaskFilter } from '@/composables/useTaskFilter';
 
+// Reactive state for tasks and modal visibility
 const tasks = reactive([]);
 const showTaskModal = ref(false);
 const currentTask = ref(null);
 const taskFilter = useTaskFilter();
-const isFiltering = ref(false);
+const isFiltering = ref(false); // Used to control transition behavior during filtering
 
-// Add a ref for the TaskModal component
+// Reference to the TaskModal component for direct DOM manipulation
 const taskModalRef = ref(null);
 
+/**
+ * Opens the task modal. If a task is provided, it loads the task into the modal for editing.
+ * Otherwise, it opens the modal for creating a new task.
+ */
 const openTaskModal = (task = null) => {
   currentTask.value = task || { id: null, name: '', details: '', completed: false, marked: false };
   showTaskModal.value = true;
 
+  // Ensures the input field in the modal is focused when adding a new task
   nextTick(() => {
     requestAnimationFrame(() => {
-      // Use the correct ref
       if (taskModalRef.value && !currentTask.value.id) {
         taskModalRef.value.focusInput();
       }
@@ -61,11 +73,18 @@ const openTaskModal = (task = null) => {
   });
 };
 
+/**
+ * Closes the task modal and resets the current task.
+ */
 const closeTaskModal = () => {
   showTaskModal.value = false;
   currentTask.value = null;
 };
 
+/**
+ * Saves a task. If the task has an ID, it updates the existing task.
+ * Otherwise, it adds a new task and assigns a unique ID.
+ */
 const saveTask = (task) => {
   if (task.id) {
     const index = tasks.findIndex(t => t.id === task.id);
@@ -73,17 +92,22 @@ const saveTask = (task) => {
       tasks[index] = task;
     }
   } else {
-    // Assign a unique ID using Date.now()
-    task.id = Date.now();
+    task.id = Date.now(); // Generate a unique ID using timestamp
     tasks.push(task);
   }
-  saveTasksToLocalStorage();
+  saveTasksToLocalStorage(); // Persist changes to local storage
 };
 
+/**
+ * Opens the task modal for editing an existing task.
+ */
 const editTask = (task) => {
   openTaskModal(task);
 };
 
+/**
+ * Deletes a task by ID and closes the modal if it's open.
+ */
 const deleteTask = (taskId) => {
   const index = tasks.findIndex(t => t.id === taskId);
   if (index !== -1) {
@@ -93,52 +117,47 @@ const deleteTask = (taskId) => {
   closeTaskModal(); // Ensure modal is closed after deletion
 };
 
+/**
+ * Marks a task as completed or not completed, and adjusts the task order based on completion status.
+ */
 const completeTask = (task) => {
   const index = tasks.findIndex(t => t.id === task.id);
   if (index !== -1) {
     tasks[index].completed = task.completed;
 
-    // Remove the task from its current position
+    // Move task to the correct position based on its completed status
     const [movedTask] = tasks.splice(index, 1);
-
     if (task.completed) {
-      // If the task is completed, push it to the end of the list
-      tasks.push(movedTask);
+      tasks.push(movedTask); // Push to end if completed
     } else {
-      // If the task is reactivated and marked, move it to the top
-      if (task.marked) {
-        tasks.unshift(movedTask);
-      } else {
-        // Move task to the end if unmarked
-        tasks.push(movedTask);
-      }
+      task.marked ? tasks.unshift(movedTask) : tasks.push(movedTask); // Unshift to top if marked
     }
   }
   saveTasksToLocalStorage();
 };
 
-// Toggle mark status and reorder the task list
+/**
+ * Toggles the mark status of a task and adjusts the task order accordingly.
+ */
 const toggleMark = (task) => {
   const index = tasks.findIndex(t => t.id === task.id);
   if (index !== -1) {
-    // Remove the task from its current position
     const [movedTask] = tasks.splice(index, 1);
-
-    if (task.marked) {
-      // Move task to the top if marked
-      tasks.unshift(movedTask);
-    } else {
-      // Move task to the end if unmarked
-      tasks.push(movedTask);
-    }
+    task.marked ? tasks.unshift(movedTask) : tasks.push(movedTask); // Move to top if marked
   }
   saveTasksToLocalStorage();
 };
 
+/**
+ * Saves tasks to local storage.
+ */
 const saveTasksToLocalStorage = () => {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
+/**
+ * Loads tasks from local storage on component mount.
+ */
 const loadTasksFromLocalStorage = () => {
   const savedTasks = localStorage.getItem('tasks');
   if (savedTasks) {
@@ -146,18 +165,22 @@ const loadTasksFromLocalStorage = () => {
   }
 };
 
+/**
+ * Computed property to get filtered tasks based on current filter.
+ * Sorts tasks by marked status and creation time.
+ */
 const filteredTasks = computed(() => {
-  // First, filter tasks based on the current filter (active/completed)
   const filtered = taskFilter.value === 'active' ? tasks.filter(t => !t.completed) : tasks.filter(t => t.completed);
-
-  // Then, sort by marked status and ID (newest to oldest)
   return filtered.sort((a, b) => {
-    if (a.marked && !b.marked) return -1; // Marked tasks come first
-    if (!a.marked && b.marked) return 1;  // Unmarked tasks come later
-    return b.id - a.id; // Within marked or unmarked, sort by ID (newest first)
+    if (a.marked && !b.marked) return -1;
+    if (!a.marked && b.marked) return 1;
+    return b.id - a.id;
   });
 });
 
+/**
+ * Animations for task list items when they are removed.
+ */
 const beforeLeave = (el) => {
   const height = el.offsetHeight;
   el.style.height = `${height}px`;
@@ -172,7 +195,7 @@ const leave = (el) => {
   }, 0);
 };
 
-// Watch the filter and toggle the isFiltering flag
+// Watch the filter state and update the isFiltering flag for smoother transitions
 watch(taskFilter, () => {
   isFiltering.value = true;
   nextTick(() => {
@@ -180,9 +203,9 @@ watch(taskFilter, () => {
   });
 });
 
+// Load tasks from local storage when the component is mounted
 onMounted(loadTasksFromLocalStorage);
 </script>
-
 
 <style scoped>
 .task-list {

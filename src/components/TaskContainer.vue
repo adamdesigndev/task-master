@@ -6,15 +6,19 @@
     @animationend="onAnimationEnd"
     @click="openModal"
   >
-    <!-- Checkbox and other task details -->
+    <!-- Checkbox for marking task completion -->
     <label class="custom-checkbox" @click.stop>
       <input type="checkbox" v-model="isCompleted" @change="markCompleted" />
       <span :class="{'checkmark': true, 'completed-checkmark': isCompleted}"></span>
     </label>
+    
+    <!-- Display task name and truncated details -->
     <div class="task-text-container">
       <h3>{{ task.name }}</h3>
       <p class="container-note-text">{{ truncatedDetails }}</p>
     </div>
+    
+    <!-- Button to toggle task marker -->
     <div class="wrapper-task-marker">
       <button class="marker-btn" @click.stop="toggleMarker">
         <img :src="markerImage" alt="marker" />
@@ -28,58 +32,74 @@ import { ref, toRefs, watch, computed } from 'vue';
 import marker1 from '@/assets/done-marker-1.svg';
 import marker2 from '@/assets/done-marker-2.svg';
 
+// Define props and events for the component
 const props = defineProps({
   task: Object
 });
 const emit = defineEmits(['edit', 'complete', 'toggle-mark']);
 
+// Destructure the 'task' prop and initialize reactive states
 const { task } = toRefs(props);
-const animate = ref(false);
-const isCompleted = ref(task.value.completed);
+const animate = ref(false);  // Controls the animation state
+const isCompleted = ref(task.value.completed);  // Tracks completion status of the task
 
-// Ref to store the current marker image
+// Determine the initial marker image based on the task's marked state
 const markerImage = ref(task.value.marked ? marker2 : marker1);
 
-// Toggle function to switch between images and emit an event
+/**
+ * Toggles the marker status of the task and emits an event to update the parent component.
+ */
 const toggleMarker = () => {
   task.value.marked = !task.value.marked;
   markerImage.value = task.value.marked ? marker2 : marker1;
-  emit('toggle-mark', task.value);
+  emit('toggle-mark', task.value);  // Emit toggle event to parent
 };
 
+/**
+ * Watcher to detect changes in the 'isCompleted' reactive reference and trigger task completion.
+ */
 watch(isCompleted, (newVal) => {
   if (newVal !== task.value.completed) {
     markCompleted();
   }
 });
 
+/**
+ * Emits an 'edit' event to the parent component to open the modal for editing the task.
+ */
 const openModal = () => {
   emit('edit', task.value);
 };
 
+/**
+ * Marks the task as completed and emits a 'complete' event after a short delay to allow for animations.
+ */
 const markCompleted = () => {
-  animate.value = true;
+  animate.value = true;  // Start animation
   setTimeout(() => {
-    emit('complete', { ...task.value, completed: isCompleted.value }); // Emit complete event after animation
-  }, 500); // Adjust the duration to match your animation
+    emit('complete', { ...task.value, completed: isCompleted.value });  // Emit complete event after animation
+  }, 500);  // Animation duration
 };
 
-// Method to handle the animation end event
+/**
+ * Handles the end of the animation by emitting a 'complete' event if the task is marked as completed.
+ */
 const onAnimationEnd = () => {
   if (isCompleted.value) {
     emit('complete', { ...task.value, completed: true });
   }
 };
 
-// Computed property to limit the number of characters displayed
+/**
+ * Computed property to truncate task details if they exceed a certain length.
+ */
 const truncatedDetails = computed(() => {
-  const maxLength = 30; // Adjust this value as needed
+  const maxLength = 30;  // Maximum number of characters to display
   return task.value.details.length > maxLength
     ? task.value.details.slice(0, maxLength) + '...'
     : task.value.details;
 });
 </script>
-
 
 <style scoped>
 .task-container {
@@ -215,8 +235,8 @@ const truncatedDetails = computed(() => {
 }
 
 .marker-btn img {
-  width: 24px;  /* Ensure consistent width */
-  height: 24px; /* Ensure consistent height */
-  display: block; /* Ensure no extra space around the image */
+  width: 24px;  
+  height: 24px; 
+  display: block; 
 }
 </style>

@@ -1,6 +1,8 @@
 <!-- LoadingScreen.vue -->
 <template>
+  <!-- Fade transition for loading screen with a logo -->
   <transition name="fade" @after-leave="onAfterLeave">
+    <!-- Loading screen is visible until isVisible is set to false -->
     <div class="loading-screen" v-if="isVisible">
       <div class="logo-container">
         <img src="@/assets/dun-logo.svg" alt="Loading Logo" class="loading-logo">
@@ -12,17 +14,26 @@
 <script setup>
 import { ref, onMounted, defineEmits } from 'vue';
 
+// State to control the visibility of the loading screen
 const isVisible = ref(true);
+
+// Emit event to notify when loading is complete
 const emit = defineEmits(['loading-complete']);
 
+/**
+ * Emits 'loading-complete' after the loading screen has faded out.
+ */
 const onAfterLeave = () => {
   emit('loading-complete');
 };
 
+/**
+ * Hides the loading screen after a delay when the component is mounted.
+ */
 onMounted(() => {
   setTimeout(() => {
     isVisible.value = false;
-  }, 1250); // Adjust this duration as needed
+  }, 1250); // Duration for loading screen visibility; adjust as needed
 });
 </script>
 

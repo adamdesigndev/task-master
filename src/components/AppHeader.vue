@@ -1,17 +1,21 @@
 <!-- AppHeader.vue -->
 <template>
+  <!-- Header section with logo and menu button -->
   <header class="sticky-header">
     <img class="header-logo" src="@/assets/dun-logo.svg" alt="Logo">
     <div class="menu-container">
+      <!-- Button to toggle the dropdown menu -->
       <button class="header-menu-btn" @click="toggleMenu">
         <img class="menu-icon" src="@/assets/dun-menu-icon.svg" alt="Menu">
       </button>
+      <!-- Dropdown menu for task filters -->
       <DropdownMenu v-if="showMenu" 
                     @showActiveTasks="showActiveTasks" 
                     @showCompletedTasks="showCompletedTasks" />
     </div>
   </header>
   
+  <!-- Section to display filter status and option to clear the filter -->
   <div v-if="isFilterOn" class="wrapper-filtered-by">
     <div class="wrapper-filter-text-btn">
       <p>Filtered by: Completed</p>
@@ -26,10 +30,15 @@ import DropdownMenu from '@/components/DropdownMenu.vue';
 import { useTaskFilter } from '@/composables/useTaskFilter';
 import { activeMenu } from '@/eventBus';
 
+// State management for menu visibility and task filter
 const showMenu = ref(false);
 const filter = useTaskFilter();
 const isFilterOn = ref(filter.value === 'completed');
 
+/**
+ * Toggles the visibility of the dropdown menu.
+ * Ensures only one active menu at a time using a global event bus.
+ */
 const toggleMenu = () => {
   if (showMenu.value) {
     showMenu.value = false;
@@ -43,6 +52,9 @@ const toggleMenu = () => {
   }
 };
 
+/**
+ * Sets the filter to show active tasks and closes the menu.
+ */
 const showActiveTasks = () => {
   filter.value = 'active';
   isFilterOn.value = false;
@@ -50,6 +62,9 @@ const showActiveTasks = () => {
   activeMenu.value = null;
 };
 
+/**
+ * Sets the filter to show completed tasks and closes the menu.
+ */
 const showCompletedTasks = () => {
   filter.value = 'completed';
   isFilterOn.value = true;
@@ -57,10 +72,16 @@ const showCompletedTasks = () => {
   activeMenu.value = null;
 };
 
+/**
+ * Clears the task filter by resetting to show active tasks.
+ */
 const clearFilter = () => {
   showActiveTasks();
 };
 
+/**
+ * Closes the menu when clicking outside the menu container.
+ */
 const handleClickOutside = (event) => {
   if (!event.target.closest('.menu-container')) {
     showMenu.value = false;
@@ -70,6 +91,7 @@ const handleClickOutside = (event) => {
   }
 };
 
+// Add event listeners for handling clicks outside the menu
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
 });
@@ -99,7 +121,6 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: -webkit-sticky; /* For Safari */
   position: sticky;
   top: 0;
   background-color: var(--clr-background);
@@ -123,7 +144,6 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  align-content: center;
   gap: .8rem;
   background-color: var(--clr-accent-200);
   padding: .1rem .5rem;
@@ -143,13 +163,9 @@ onBeforeUnmount(() => {
   color: var(--clr-accent-100);
   padding: .1rem;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
 }
-.wrapper-filter-text-btn button img{
+
+.wrapper-filter-text-btn button img {
   height: .7rem;
   display: block;
 }
